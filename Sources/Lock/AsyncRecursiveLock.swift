@@ -8,10 +8,10 @@ final class AsyncRecursiveLock {
 	public init() {
 	}
 
-	public func withLock<T: Sendable>(
+	public func withLock<T: Sendable, E: Error>(
 		isolation: isolated (any Actor)? = #isolation,
-		_ block: () async throws -> T
-	) async rethrows -> T {
+		_ block: () async throws(E) -> T
+	) async throws(E) -> T {
 		let id = ObjectIdentifier(self)
 		var set = Self.lockedSet
 
@@ -23,17 +23,23 @@ final class AsyncRecursiveLock {
 			return try await block()
 		}
 
-		return try await internalLock.withLock {
-			try await Self.$lockedSet.withValue(set) {
-				try await block()
+		return try await internalLock.withLock { () throws(E) -> T in
+			do {
+				return try await Self.$lockedSet.withValue(set) {
+					try await block()
+				}
+			} catch {
+				/* withValue from TaskLocal does not seem to properly throw typed errors (yet?).
+				 * It does rethrows though, so the forced cast should be valid. */
+				throw error as! E
 			}
 		}
 	}
 
-//	public func withLock<T: Sendable>(
+//	public func withLock<T: Sendable, E: Error>(
 //			isolation: isolated (any Actor)? = #isolation,
-//			_ block: () async throws -> T
-//		) async rethrows -> T {
+//			_ block: () async throws(E) -> T
+//		) async throws(E) -> T {
 //			if Self.locked {
 //				return try await block()
 //			}
@@ -51,7 +57,7 @@ final class AsyncRecursiveLock {
 //			} catch {
 //				internalLock.unlock()
 //
-//				throw error
+//				throw error as! E
 //			}
 //		}
 }
