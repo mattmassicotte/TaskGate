@@ -13,21 +13,25 @@ on:
     branches:
       - main
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Test
     runs-on: macOS-14
     env:
-      DEVELOPER_DIR: /Applications/Xcode_16.1_beta_2.app
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app
     strategy:
       matrix:
         destination:
           - "platform=macOS"
           - "platform=macOS,variant=Mac Catalyst"
-          - "platform=iOS Simulator,name=iPhone 15"
+          - "platform=iOS Simulator,name=iPhone 16"
           - "platform=tvOS Simulator,name=Apple TV"
-          - "platform=watchOS Simulator,name=Apple Watch Series 9 (41mm)"
-
+          - "platform=watchOS Simulator,name=Apple Watch Series 10 (42mm)"
+          - "platform=visionOS Simulator,name=Apple Vision Pro"
     steps:
       - uses: actions/checkout@v4
       - name: Test platform ${{ matrix.destination }}
@@ -36,12 +40,13 @@ jobs:
   linux_test:
     name: Test Linux
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install swiftly
-        run: curl -L https://swiftlang.github.io/swiftly/swiftly-install.sh | bash -s -- -y
-      - name: Install the latest Swift toolchain
-        run: swiftly install latest
+      - name: Swiftly
+        uses: vapor/swiftly-action@v0.2.0
+        with:
+          toolchain: 6.1
       - name: Test
         run: swift test
