@@ -38,7 +38,7 @@ public final class AsyncLock {
 	public init() {
 	}
 
-	public func lock(isolation: isolated (any Actor)? = #isolation) async {
+	public func lock() async {
 		switch state {
 		case .unlocked:
 			self.state = .locked([])
@@ -53,14 +53,13 @@ public final class AsyncLock {
 		state.resumeNextContinuation()
 	}
 
-	public func withLock<T: Sendable, E: Error>(
-		isolation: isolated (any Actor)? = #isolation,
-		_ block: @isolated(any) () async throws(E) -> T
-	) async throws(E) -> T {
+	public func withLock<Result, E>(
+		_ body: () async throws(E) -> sending Result
+	) async throws(E) -> sending Result where E: Error, Result: ~Copyable {
 		await lock()
 
 		do {
-			let value = try await block()
+			let value = try await body()
 
 			unlock()
 

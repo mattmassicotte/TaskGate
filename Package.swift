@@ -1,4 +1,4 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.2
 
 import PackageDescription
 
@@ -19,10 +19,17 @@ let package = Package(
 	],
 	targets: [
 		.target(
-			name: "Lock"),
+			name: "Lock",
+			swiftSettings: [
+				.enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+			]
+		),
 		.testTarget(
 			name: "LockTests",
-			dependencies: ["Lock"]),
-	],
-	swiftLanguageVersions: [.v6]
+			dependencies: ["Lock"],
+			swiftSettings: [
+				.enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+			]
+		),
+	]
 )

@@ -85,4 +85,23 @@ struct LockTests {
 		}
 		#expect(lock.isLocked == false)
 	}
+
+	@Test @MainActor
+	func cancelWhileLocked() async throws {
+		let lock = AsyncLock()
+
+		let t = Task {
+			try await lock.withLock {
+				try await Task.sleep(nanoseconds: 5_000_000)
+			}
+		}
+
+		await #expect(throws: CancellationError.self) {
+			t.cancel()
+			
+			try await t.value
+		}
+
+		#expect(lock.isLocked == false)
+	}
 }
