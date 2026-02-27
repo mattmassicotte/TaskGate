@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-	name: "Lock",
+	name: "TaskGate",
 	platforms: [
 		.macOS(.v10_15),
 		.macCatalyst(.v13),
@@ -14,19 +14,19 @@ let package = Package(
 	],
 	products: [
 		.library(
-			name: "Lock",
-			targets: ["Lock"]),
+			name: "Gate",
+			targets: ["Gate"]),
 	],
 	targets: [
 		.target(
-			name: "Lock",
+			name: "Gate",
 			swiftSettings: [
 				.enableUpcomingFeature("NonisolatedNonsendingByDefault"),
 			]
 		),
 		.testTarget(
-			name: "LockTests",
-			dependencies: ["Lock"],
+			name: "GateTests",
+			dependencies: ["Gate"],
 			swiftSettings: [
 				.enableUpcomingFeature("NonisolatedNonsendingByDefault"),
 			]

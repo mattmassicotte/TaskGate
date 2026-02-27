@@ -1,4 +1,4 @@
-public final class AsyncLock {
+public final class AsyncGate {
 	private enum State {
 		typealias Continuation = CheckedContinuation<Void, Never>
 
@@ -38,7 +38,7 @@ public final class AsyncLock {
 	public init() {
 	}
 
-	public func lock() async {
+	private func lock() async {
 		switch state {
 		case .unlocked:
 			self.state = .locked([])
@@ -49,13 +49,13 @@ public final class AsyncLock {
 		}
 	}
 
-	public func unlock() {
+	private func unlock() {
 		state.resumeNextContinuation()
 	}
 
-	public func withLock<Result, E>(
-		_ body: () async throws(E) -> sending Result
-	) async throws(E) -> sending Result where E: Error, Result: ~Copyable {
+	public func withGate<Result, Failure>(
+		_ body: () async throws(Failure) -> sending Result
+	) async throws(Failure) -> sending Result where Failure: Error, Result: ~Copyable {
 		await lock()
 
 		do {
@@ -71,7 +71,7 @@ public final class AsyncLock {
 		}
 	}
 
-	public var isLocked: Bool {
+	public var isGated: Bool {
 		get {
 			switch state {
 			case .unlocked:

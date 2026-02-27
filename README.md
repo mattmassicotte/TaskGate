@@ -6,14 +6,14 @@
 
 </div>
 
-# Lock
-A lock for Swift concurrency
+# TaskGate
+An tool for managing actor reentrancy.
 
-This package exposes two types: `AsyncLock` and `AsyncRecursiveLock`. These allow you to define **asynchronous** critical sections. Only one task can enter a critical section at a time. Unlike a traditional lock, you can safely make async calls while these locks are held.
+This package exposes two types: `AsyncGate` and `AsyncRecursiveGate`. These allow you to define **asynchronous** critical sections. Only one task can enter a critical section at a time. Unlike a traditional lock, you can safely make async calls while these gates are held.
 
-This is a handy tool for dealing with actor reentrancy.
+The intended use-case for these is managing actor reentrancy.
 
-Some other concurrency packages you might find useful are [Queue][] and [Semaphore][].
+Some other concurrency packages you might find useful are [Queue][] and [Semaphore][]. [Gate][] is an independent, but extremely similar package.
 
 ## Integration
 
@@ -21,38 +21,36 @@ Swift Package Manager:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/mattmassicotte/Lock", branch: "main")
+    .package(url: "https://github.com/mattmassicotte/TaskGate", branch: "main")
 ]
 ```
 
 ## Usage
 
-These locks are **non-Sendable**. This is an intentional choice to disallow sharing the lock across isolation domains. If you want to do something like that, first think really hard about why and then check out [Semaphore][].
+Gates are very intentionally **non-Sendable**. The purpose of a gate is to control tasks running concurrently within a **single** actor, and making them non-`Sendable` allows the compiler will help enforce that concept.
 
-Note that trying to acquire an already-locked `AsyncLock` **will** deadlock your actor.
+Note that trying to acquire an already-gated `AsyncGate` **will** deadlock your actor.
 
 ```swift
-import Lock
+import TaskGate
 
 actor MyActor {
   var value = 42
-  let lock = AsyncLock()
-  let recursiveLock = AsyncRecursiveLock()
+  let gate = AsyncGate()
+  let recursiveGate = AsyncRecursiveGate()
 
   func hasCriticalSections() async {
     // no matter how many tasks call this method,
     // only one will be able to execute at a time
-    await lock.lock()
-
-    self.value = await otherObject.getValue()
-
-    lock.unlock()
+	await gate.withGate {
+      self.value = await otherObject.getValue()
+    }
   }
 
   func hasCriticalSectionsBlock() async {
-    await recursiveLock.withLock {
+    await recursiveGate.withGate {
       // acquiring this multiple times within the same task is safe
-      await recursiveLock.withLock {
+      await recursiveGate.withGate {
         self.value = await otherObject.getValue()
       }
     }
@@ -60,7 +58,7 @@ actor MyActor {
 }
 ```
 
-Unfortunately, I haven't quite figured out how to make `AsyncRecursiveLock` right yet, so it's currently not public.
+It is important to note that both gate types cannot be used from a non-async context. Actually doing this would require some trickery, as they both only have async interfaces. But, if you find a way, perhaps via ObjC bridging, you should expect a crash.
 
 ## Contributing and Collaboration
 
@@ -81,3 +79,4 @@ By participating in this project you agree to abide by the [Contributor Code of 
 [discord]: https://discord.gg/esFpX6sErJ
 [Semaphore]: https://github.com/groue/Semaphore
 [Queue]: https://github.com/mattmassicotte/Queue
+[Gate]: https://github.com/wadetregaskis/Gate
