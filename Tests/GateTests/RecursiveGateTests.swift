@@ -1,5 +1,5 @@
 import Testing
-@testable import Lock
+import Gate
 
 actor ReentrantSensitiveState {
 	var value = 42

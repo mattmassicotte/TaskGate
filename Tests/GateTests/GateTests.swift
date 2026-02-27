@@ -1,5 +1,5 @@
 import Testing
-import Lock
+import Gate
 
 actor ReentrantActor {
 	let state = ReentrantSensitiveState()
