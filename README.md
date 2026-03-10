@@ -32,7 +32,7 @@ Gates are very intentionally **non-Sendable**. The purpose of a gate is to contr
 Note that trying to acquire an already-gated `AsyncGate` **will** deadlock your actor.
 
 ```swift
-import Gate
+import TaskGate
 
 actor MyActor {
   var value = 42

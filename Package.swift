@@ -14,19 +14,19 @@ let package = Package(
 	],
 	products: [
 		.library(
-			name: "Gate",
-			targets: ["Gate"]),
+			name: "TaskGate",
+			targets: ["TaskGate"]),
 	],
 	targets: [
 		.target(
-			name: "Gate",
+			name: "TaskGate",
 			swiftSettings: [
 				.enableUpcomingFeature("NonisolatedNonsendingByDefault"),
 			]
 		),
 		.testTarget(
-			name: "GateTests",
-			dependencies: ["Gate"],
+			name: "TaskGateTests",
+			dependencies: ["TaskGate"],
 			swiftSettings: [
 				.enableUpcomingFeature("NonisolatedNonsendingByDefault"),
 			]

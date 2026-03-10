@@ -1,5 +1,5 @@
 import Testing
-import Gate
+import TaskGate
 
 actor ReentrantActor {
 	let state = ReentrantSensitiveState()
@@ -12,7 +12,7 @@ actor ReentrantActor {
 	}
 }
 
-struct GateTests {
+struct AsyncGateTests {
 	@Test
 	func serializes() async throws {
 		let actor = ReentrantActor()

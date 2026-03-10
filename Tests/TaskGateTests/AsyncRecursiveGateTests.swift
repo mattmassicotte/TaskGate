@@ -1,5 +1,5 @@
 import Testing
-import Gate
+import TaskGate
 
 actor ReentrantSensitiveState {
 	var value = 42
@@ -44,7 +44,7 @@ actor TwoGateRecursiveReentrantActor {
 	}
 }
 
-struct RecursiveGateTests {
+struct AsyncRecursiveGateTests {
 	@Test
 	func recursion() async {
 		let gate = AsyncRecursiveGate()
