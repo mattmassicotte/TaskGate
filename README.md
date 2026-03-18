@@ -58,7 +58,9 @@ actor MyActor {
 }
 ```
 
-It is important to note that both gate types cannot be used from a non-async context. Actually doing this would require some trickery, as they both only have async interfaces. But, if you find a way, perhaps via ObjC bridging, you should expect a crash.
+Both of these gate types support priority escalation propagation to help avoid priority inversions. However, the API required to do this was introduced with [SE-0462](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0462-task-priority-escalation-apis.md), which is only available in the 26 OSes and later.
+
+It is important to note that gates cannot be used from a non-async context. Actually doing this would require some trickery, as they both only have async interfaces. But, if you find a way, perhaps via ObjC bridging, you should expect a crash.
 
 ## Contributing and Collaboration
 
