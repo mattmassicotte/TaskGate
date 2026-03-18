@@ -65,8 +65,8 @@ struct AsyncGateTests {
 		#expect(gate.isGated == false)
 	}
 
-	@available(macOS 26.0, *)
 	@Test
+	@available(macOS 26.0, macCatalyst 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, visionOS 26.0, *)
 	func escalatingPriorities() async throws {
 		let actor = ReentrantActor()
 		var tasks: [Task<Void, any Error>] = []
