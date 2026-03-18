@@ -43,14 +43,12 @@ struct PendingContinuationQueue {
 	}
 
 	func escalatePriority(to priority: TaskPriority) {
-#if swift(>=6.2)
 		// it is ok for this to be a no-op when empty or unavailable
 		guard #available(macOS 26.0, macCatalyst 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, visionOS 26.0, *) else { return }
 
 		for pair in pending {
 			pair.task.escalatePriority(to: priority)
 		}
-#endif
 	}
 
 	var isEmpty: Bool { pending.isEmpty }
