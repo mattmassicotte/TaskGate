@@ -115,6 +115,7 @@ public final class AsyncGate {
 	private func withEscalationMonitoring<Result, Failure: Error>(
 		_ body: () async throws(Failure) -> Result
 	) async throws(Failure) -> Result {
+#if swift(>=6.2)
 		guard #available(macOS 26.0, macCatalyst 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, visionOS 26.0, *) else {
 			return try await body()
 		}
@@ -130,5 +131,8 @@ public final class AsyncGate {
 				uncheckedSelf.escalatePriority(to: newPriority)
 			}
 		}
+#else
+	return try await body()
+#endif
 	}
 }

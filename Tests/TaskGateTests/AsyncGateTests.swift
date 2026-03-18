@@ -65,6 +65,7 @@ struct AsyncGateTests {
 		#expect(gate.isGated == false)
 	}
 
+#if swift(>=6.2)
 	@Test
 	@available(macOS 26.0, macCatalyst 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, visionOS 26.0, *)
 	func escalatingPriorities() async throws {
@@ -95,4 +96,5 @@ struct AsyncGateTests {
 			try await t.value
 		}
 	}
+#endif
 }
