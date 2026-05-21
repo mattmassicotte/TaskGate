@@ -27,7 +27,7 @@ dependencies: [
 
 ## Usage
 
-Gates are very intentionally **non-Sendable**. The purpose of a gate is to control tasks running concurrently within a **single** actor, and making them non-`Sendable` allows the compiler will help enforce that concept.
+Gates are very intentionally **non-Sendable**. The purpose of a gate is to control tasks running concurrently within a **single** actor, and making them non-`Sendable` allows the compiler to help enforce this.
 
 Note that trying to acquire an already-gated `AsyncGate` **will** deadlock your actor.
 
