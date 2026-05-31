@@ -13,6 +13,8 @@ This package exposes two types: `AsyncGate` and `AsyncRecursiveGate`. These allo
 
 The intended use-case for these is managing actor reentrancy.
 
+Despite being similar conceptually, it's worth noting that this type is not called a "lock". Gates do not block the current **thread**. They operate at the task level and this is different enough that a new name seemed appropriate.
+
 Some other concurrency packages you might find useful are [Queue][] and [Semaphore][]. [Gate][] is an independent, but extremely similar package.
 
 ## Integration
