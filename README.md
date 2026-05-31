@@ -42,15 +42,17 @@ actor MyActor {
   func hasCriticalSections() async {
     // no matter how many tasks call this method,
     // only one will be able to execute at a time
-	await gate.withGate {
+    await gate.withGate {
+      await work()
       self.value = await otherObject.getValue()
     }
   }
 
-  func hasCriticalSectionsBlock() async {
+  func hasNestedCriticalSections() async {
     await recursiveGate.withGate {
       // acquiring this multiple times within the same task is safe
       await recursiveGate.withGate {
+        await work()
         self.value = await otherObject.getValue()
       }
     }
