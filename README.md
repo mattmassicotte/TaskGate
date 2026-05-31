@@ -76,10 +76,10 @@ I prefer indentation with tabs for improved accessibility. But, I'd rather you u
 
 By participating in this project you agree to abide by the [Contributor Code of Conduct](CODE_OF_CONDUCT.md).
 
-[build status]: https://github.com/mattmassicotte/Lock/actions
-[build status badge]: https://github.com/mattmassicotte/Lock/workflows/CI/badge.svg
-[platforms]: https://swiftpackageindex.com/mattmassicotte/Lock
-[platforms badge]: https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fmattmassicotte%2FLock%2Fbadge%3Ftype%3Dplatforms
+[build status]: https://github.com/mattmassicotte/TaskGate/actions
+[build status badge]: https://github.com/mattmassicotte/TaskGate/workflows/CI/badge.svg
+[platforms]: https://swiftpackageindex.com/mattmassicotte/TaskGate
+[platforms badge]: https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fmattmassicotte%2FTaskGate%2Fbadge%3Ftype%3Dplatforms
 [matrix]: https://matrix.to/#/%23chimehq%3Amatrix.org
 [matrix badge]: https://img.shields.io/matrix/chimehq%3Amatrix.org?label=Matrix
 [discord]: https://discord.gg/esFpX6sErJ
