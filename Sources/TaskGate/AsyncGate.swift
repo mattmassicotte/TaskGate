@@ -32,6 +32,8 @@ public final class AsyncGate {
 		}
 	}
 
+	// These two functions exist because NSLock.lock/unlock are marked as unavailable from
+	// async methods. But we are being very careful.
 	private func takeLock() {
 		lock.lock()
 	}
@@ -41,6 +43,7 @@ public final class AsyncGate {
 	}
 
 	private func closeGate() async {
+		// the wrapped functions must be used because we are in an async context
 		takeLock()
 
 		switch state {
