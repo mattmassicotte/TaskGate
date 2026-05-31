@@ -1,5 +1,8 @@
 import Foundation
 
+/// Allows exactly one task to execute within a critical section.
+///
+/// AsyncGate allow you to define asynchronous critical sections. Only one task can enter a critical section at a time. Unlike a traditional lock, you can safely make async calls while these gates are held.
 public final class AsyncGate {
 	private enum State {
 		typealias Continuation = CheckedContinuation<Void, Never>
@@ -94,6 +97,9 @@ public final class AsyncGate {
 		}
 	}
 
+	/// Defines a critical section protected by the gate.
+	///
+	/// - Warning: Recursively attemping to recursively call `withGate` will deadlock the current actor.
 	public func withGate<Result, Failure>(
 		_ body: () async throws(Failure) -> Result
 	) async throws(Failure) -> Result where Failure: Error {
