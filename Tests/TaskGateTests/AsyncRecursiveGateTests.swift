@@ -70,10 +70,14 @@ struct AsyncRecursiveGateTests {
 		let gate2 = AsyncRecursiveGate()
 
 		await gate1.withGate {
+			#expect(gate1.isGated)
+			#expect(gate2.isGated == false)
 			await gate2.withGate {
 				#expect(gate1.isGated)
 				#expect(gate2.isGated)
 			}
+			#expect(gate1.isGated)
+			#expect(gate2.isGated == false)
 		}
 	}
 

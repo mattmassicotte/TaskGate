@@ -66,6 +66,28 @@ struct AsyncGateTests {
 	}
 
 	@Test
+	func holdTwoDifferentGates() async throws {
+		let gate1 = AsyncGate()
+		let gate2 = AsyncGate()
+
+		#expect(gate1.isGated == false)
+		await gate1.withGate {
+			#expect(gate1.isGated == true)
+			#expect(gate2.isGated == false)
+
+			await gate2.withGate {
+				#expect(gate1.isGated == true)
+				#expect(gate2.isGated == true)
+			}
+
+			#expect(gate1.isGated == true)
+			#expect(gate2.isGated == false)
+		}
+		#expect(gate1.isGated == false)
+		#expect(gate2.isGated == false)
+	}
+
+	@Test
 	@available(macOS 26.0, macCatalyst 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, visionOS 26.0, *)
 	func escalatingPriorities() async throws {
 		let actor = ReentrantActor()
