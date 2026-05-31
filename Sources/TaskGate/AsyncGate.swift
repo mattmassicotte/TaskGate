@@ -96,19 +96,9 @@ public final class AsyncGate {
 	) async throws(Failure) -> Result where Failure: Error {
 		try await withEscalationMonitoring { () throws(Failure) -> Result in
 			await closeGate()
+			defer { openGate() }
 
-			do throws(Failure) {
-				let value = try await body()
-
-				openGate()
-
-				return value
-			} catch {
-				openGate()
-
-				// unsure why the compiler believes this could be `any Error`
-				throw error
-			}
+			return try await body()
 		}
 	}
 
