@@ -99,7 +99,7 @@ public final class AsyncGate {
 
 	/// Defines a critical section protected by the gate.
 	///
-	/// - Warning: Recursively attemping to recursively call `withGate` will deadlock the current actor.
+	/// - Warning: Attemping to recursively call `withGate` **will** deadlock the current actor.
 	public func withGate<Result, Failure>(
 		_ body: () async throws(Failure) -> Result
 	) async throws(Failure) -> Result where Failure: Error {
