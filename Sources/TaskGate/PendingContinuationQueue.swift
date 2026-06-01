@@ -1,7 +1,7 @@
-struct PendingContinuationQueue {
+struct PendingContinuationQueue: Equatable {
 	typealias Continuation = CheckedContinuation<Void, Never>
 
-	struct Pair {
+	struct Pair: Equatable {
 		let continuation: Continuation
 		let task: UnsafeCurrentTask
 

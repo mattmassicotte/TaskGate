@@ -4,7 +4,7 @@ import Foundation
 ///
 /// AsyncGate allow you to define asynchronous critical sections. Only one task can enter a critical section at a time. Unlike a traditional lock, you can safely make async calls while these gates are held.
 public final class AsyncGate {
-	private enum State {
+	private enum State: Equatable {
 		typealias Continuation = CheckedContinuation<Void, Never>
 
 		case unlocked
@@ -27,10 +27,7 @@ public final class AsyncGate {
 	}
 
 	deinit {
-		switch state {
-		case .unlocked:
-			break
-		case .locked:
+		guard state == .unlocked else {
 			preconditionFailure("deinit called while gate is active")
 		}
 	}
@@ -111,9 +108,9 @@ public final class AsyncGate {
 		}
 	}
 
-	private func withEscalationMonitoring<Result, Failure: Error>(
-		_ body: () async throws(Failure) -> Result
-	) async throws(Failure) -> Result {
+	private func withEscalationMonitoring<Success, Failure: Error>(
+		_ body: () async throws(Failure) -> Success
+	) async throws(Failure) -> Success {
 		guard #available(macOS 26.0, macCatalyst 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, visionOS 26.0, *) else {
 			return try await body()
 		}
@@ -122,7 +119,7 @@ public final class AsyncGate {
 		// but we do not want to make the type visibly Sendable.
 		nonisolated(unsafe) let uncheckedSelf = self
 
-		return try await withTaskPriorityEscalationHandler { () throws(Failure) -> Result in
+		return try await withTaskPriorityEscalationHandler { () throws(Failure) -> Success in
 			try await body()
 		} onPriorityEscalated: { _, newPriority in
 			// This task was added to prevent self deadlock from happening
