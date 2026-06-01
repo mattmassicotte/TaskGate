@@ -125,6 +125,9 @@ public final class AsyncGate {
 		return try await withTaskPriorityEscalationHandler { () throws(Failure) -> Result in
 			try await body()
 		} onPriorityEscalated: { _, newPriority in
+			// This task was added to prevent self deadlock from happening
+			// without it, deadlock could happen because `escalatePriority`
+			// will try to have the lock which is already in use by the same thread
 			Task {
 				uncheckedSelf.escalatePriority(to: newPriority)
 			}
